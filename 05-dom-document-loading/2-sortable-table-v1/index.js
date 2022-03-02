@@ -93,13 +93,13 @@ export default class SortableTable {
     return result;
   }
 
-  sort(field, order) {
-    const sortedData = this.sortData(field, order);
+  sort(id, order) {
+    const sortedData = this.sortData(id, order);
     const allColumns = this.element.querySelectorAll(
       ".sortable-table__cell[data-id]"
     );
     const currentColumn = this.element.querySelector(
-      `.sortable-table__cell[data-id="${field}"]`
+      `.sortable-table__cell[data-id="${id}"]`
     );
 
     allColumns.forEach((column) => {
@@ -111,9 +111,9 @@ export default class SortableTable {
     this.subElements.body.innerHTML = this.getTableBody(sortedData);
   }
 
-  sortData(field, order) {
+  sortData(id, order) {
     const arr = [...this.data];
-    const column = this.headerConfig.find((item) => item.id === field);
+    const column = this.headerConfig.find((item) => item.id === id);
     const { sortType } = column;
     const directions = {
       asc: 1,
@@ -129,11 +129,11 @@ export default class SortableTable {
     return arr.sort((a, b) => {
       switch (sortType) {
         case "number":
-          return direction * (a[field] - b[field]);
+          return direction * (a[id] - b[id]);
         case "string":
-          return direction * a[field].localeCompare(b[field], locales, options);
+          return direction * a[id].localeCompare(b[id], locales, options);
         default:
-          return direction * (a[field] - b[field]);
+          return direction * (a[id] - b[id]);
       }
     });
   }
