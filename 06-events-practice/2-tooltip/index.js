@@ -23,11 +23,22 @@ class Tooltip {
 
     if (node) {
       this.render(node.dataset.tooltip);
+      document.addEventListener("pointermove", this.pointerMove);
     }
+  };
+
+  pointerMove = (event) => {
+    const shift = 10;
+    const left = event.clientX + shift;
+    const top = event.clinetY + shift;
+
+    this.element.style.left = `${left}px`;
+    this.element.style.top = `${top}px`;
   };
 
   pointerOut = (event) => {
     this.remove();
+    document.removeEventListener("pointermove", this.pointerMove);
   };
 
   render(tooltipData) {
@@ -35,7 +46,7 @@ class Tooltip {
 
     element.innerHTML = this.getTooltip(tooltipData);
 
-    this.element = element;
+    this.element = element.firstElementChild;
 
     document.body.append(this.element);
   }
@@ -57,6 +68,7 @@ class Tooltip {
   removeEventListeners() {
     document.removeEventListener("pointerover", this.pointerOver);
     document.removeEventListener("pointerout", this.pointerOut);
+    document.removeEventListener("pointermove", this.pointerMove);
   }
 
   destroy() {
