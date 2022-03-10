@@ -59,7 +59,7 @@ export default class SortableTable {
   }
 
   getSubElements(element) {
-    let result = {};
+    const result = {};
     const elements = element.querySelectorAll("[data-element]");
 
     for (const subElement of elements) {
@@ -76,6 +76,7 @@ export default class SortableTable {
       <div class="sortable-table">
         ${this.getTableHeader()}
         ${this.getTableBody()}
+        <div data-element="loading"></div>
       </div>
     `;
   }
@@ -149,14 +150,6 @@ export default class SortableTable {
       .join("");
   }
 
-  getLoadingTemplate() {
-    let loadingNode = document.createElement("div");
-    loadingNode.classList.add("loading-line", "sortable-table__loading-line");
-    loadingNode.dataset.element = "loading";
-
-    return loadingNode;
-  }
-
   async fetchData(url) {
     return await fetchJson(url);
   }
@@ -179,15 +172,16 @@ export default class SortableTable {
   };
 
   async loadData(id, order, start, end) {
-    this.subElements = this.getSubElements(this.element);
-
-    this.element.classList.add("loading-line", "sortable-table__loading-line");
+    this.subElements.loading.classList.add(
+      "loading-line",
+      "sortable-table__loading-line"
+    );
 
     const shift = 30;
     this.start = this.end;
     this.end += shift;
 
-    let url = this.url;
+    const url = this.url;
 
     url.searchParams.set("_sort", id);
     url.searchParams.set("_order", order);
@@ -196,11 +190,7 @@ export default class SortableTable {
 
     const response = await this.fetchData(url);
 
-    // if (Object.values(data).length) {
-    //   this.subElements.body.innerHTML = this.getTableRows(data);
-    // }
-
-    this.element.classList.remove(
+    this.subElements.loading.classList.remove(
       "loading-line",
       "sortable-table__loading-line"
     );
@@ -248,8 +238,6 @@ export default class SortableTable {
     if (Object.values(data).length) {
       this.subElements.body.append(...element.childNodes);
     }
-
-    console.log(this.data.length);
   }
 
   sort(id, order) {
