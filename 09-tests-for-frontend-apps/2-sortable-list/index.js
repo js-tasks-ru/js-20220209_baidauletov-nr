@@ -1,4 +1,4 @@
-export default class SortableTable {
+export default class SortableList {
   element;
   placeholderElement = null;
   dragElement = null;
